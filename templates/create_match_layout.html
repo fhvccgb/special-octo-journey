@@ -1,7 +1,5 @@
 {% extends "base.html" %}
-
 {% block title %}Create Match Layout{% endblock %}
-
 {% block content %}
 <div class="container mt-4">
     <div class="row justify-content-center">
@@ -14,7 +12,6 @@
                 </div>
                 <div class="card-body">
                     <p class="text-muted">Create optimal match pairings based on Elo ratings with automated judge assignments.</p>
-                    
                     <form method="post">
                         <div class="mb-3">
                             <label for="format" class="form-label">Debate Format</label>
@@ -24,7 +21,6 @@
                                 <option value="PF">Public Forum (Teams)</option>
                             </select>
                         </div>
-
                         <div class="mb-3" id="participants-section" style="display: none;">
                             <label class="form-label">Present Participants</label>
                             <div class="border rounded p-3" style="max-height: 300px; overflow-y: auto;">
@@ -42,7 +38,6 @@
                                         {% endif %}
                                     {% endfor %}
                                 </div>
-                                
                                 <div id="pf-participants" style="display: none;">
                                     {% for name, team in teams.items() %}
                                         {% if team.get('format') == 'PF' %}
@@ -61,7 +56,6 @@
                             </div>
                             <div class="form-text">Select all participants who are present and available to compete.</div>
                         </div>
-
                         <div class="mb-3">
                             <label class="form-label">Potential Judges</label>
                             <div class="border rounded p-3" style="max-height: 200px; overflow-y: auto;">
@@ -77,7 +71,6 @@
                             </div>
                             <div class="form-text">Select all players who can serve as judges. The system will automatically assign judges to avoid conflicts and rotate fairly.</div>
                         </div>
-
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-magic"></i> Generate Match Layout
@@ -89,17 +82,14 @@
         </div>
     </div>
 </div>
-
 <script>
 function updateParticipantList() {
     const format = document.getElementById('format').value;
     const participantsSection = document.getElementById('participants-section');
     const ldParticipants = document.getElementById('ld-participants');
     const pfParticipants = document.getElementById('pf-participants');
-    
     if (format) {
         participantsSection.style.display = 'block';
-        
         if (format === 'LD') {
             ldParticipants.style.display = 'block';
             pfParticipants.style.display = 'none';
