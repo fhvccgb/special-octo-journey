@@ -213,6 +213,26 @@ def my_account():
                            is_logged_in=True,
                            current_user=user,
                            site_content=data['site_content'])
+@app.route('/my_rubrics', methods=['GET', 'HEAD'])
+def my_rubrics():
+    """Show rubrics relevant to the logged-in user"""
+    if not requires_login():
+        flash('Please log in to view your rubrics.', 'error')
+        return redirect(url_for('login'))
+    
+    data = load_data()
+    user = get_current_user()
+
+    # You might filter rubrics specific to the user if needed.
+    # For now, show all rubrics:
+    rubrics_data = data.get('rubrics', {})
+    
+    return render_template('my_rubrics.html',
+                           rubrics=rubrics_data,
+                           is_admin=requires_admin(),
+                           is_logged_in=True,
+                           current_user=user,
+                           site_content=data['site_content'])
 @app.route('/logout')
 def logout():
     """User logout"""
