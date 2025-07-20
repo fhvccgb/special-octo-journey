@@ -213,6 +213,22 @@ def my_account():
                            is_logged_in=True,
                            current_user=user,
                            site_content=data['site_content'])
+@app.route('/player_profile/<player_name>', methods=['GET', 'HEAD'])
+def player_profile(player_name):
+    """Show detailed profile for a given player"""
+    data = load_data()
+    player = data['players'].get(player_name)
+    if not player:
+        flash('Player not found!', 'error')
+        return redirect(url_for('index'))
+    
+    return render_template('player_profile.html',
+                           player_name=player_name,
+                           player=player,
+                           is_admin=requires_admin(),
+                           is_logged_in=requires_login(),
+                           current_user=get_current_user(),
+                           site_content=data['site_content'])
 @app.route('/my_rubrics', methods=['GET', 'HEAD'])
 def my_rubrics():
     """Show rubrics relevant to the logged-in user"""
