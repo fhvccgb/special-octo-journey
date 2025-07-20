@@ -374,7 +374,199 @@ def create_match_layout_route():
         current_user=get_current_user()
     )
 
-# ... (include all your other routes, such as player_profile, add_team, stories, rubrics, record_match, etc. from your original main.py!)
+@app.route('/player_profile/<player_name>', methods=['GET', 'HEAD'])
+def player_profile(player_name):
+    """Show detailed profile for a given player"""
+    data = load_data()
+    player = data['players'].get(player_name)
+    if not player:
+        flash('Player not found!', 'error')
+        return redirect(url_for('index'))
+    return render_template('player_profile.html',
+        player_name=player_name,
+        player=player,
+        is_admin=requires_admin(),
+        is_logged_in=requires_login(),
+        current_user=get_current_user(),
+        site_content=data['site_content']
+    )
+
+@app.route('/add_team', methods=['GET', 'POST', 'HEAD'])
+def add_team():
+    """Create a new PF team - Admin only"""
+    if not requires_admin():
+        flash('Admin access required!', 'error')
+        return redirect(url_for('login'))
+    data = load_data()
+    pf_players = {k: v for k, v in data['players'].items() 
+                  if 'PF' in v.get('formats', []) or v.get('format') == 'PF'}
+    if request.method == 'POST':
+        team_name = request.form['team_name'].strip()
+        member1 = request.form['member1']
+        member2 = request.form['member2']
+        if not team_name or member1 == member2:
+            flash('Invalid team configuration!', 'error')
+            return render_template('create_team.html', players=pf_players)
+        if team_name in data['teams']:
+            flash('Team name already exists!', 'error')
+            return render_template('create_team.html', players=pf_players)
+        avg_elo = round((data['players'][member1]['elo'] + data['players'][member2]['elo']) / 2)
+        data['teams'][team_name] = {
+            'members': [member1, member2],
+            'elo': avg_elo,
+            'format': 'PF',
+            'matches_won': 0,
+            'matches_lost': 0,
+            'total_matches': 0,
+            'created_date': datetime.now().isoformat()
+        }
+        save_data(data)
+        flash(f'Created team {team_name}!', 'success')
+        return redirect(url_for('public_forum'))
+    return render_template('create_team.html', players=pf_players)
+
+@app.route('/record_match', methods=['GET', 'POST', 'HEAD'])
+def record_match():
+    """Record a match result - Admin only"""
+    if not requires_admin():
+        flash('Admin access required!', 'error')
+        return redirect(url_for('login'))
+    data = load_data()
+    if request.method == 'POST':
+        match_type = request.form['match_type']
+        if match_type == 'LD':
+            winner = request.form['winner']
+            loser = request.form['loser']
+            if winner == loser:
+                flash('A player cannot compete against themselves!', 'error')
+                return render_template('record_match.html', data=data)
+            winner_old_elo = data['players'][winner]['elo']
+            loser_old_elo = data['players'][loser]['elo']
+            new_winner_elo, new_loser_elo = update_elo_ratings(winner_old_elo, loser_old_elo)
+            data['players'][winner]['elo'] = new_winner_elo
+            data['players'][loser]['elo'] = new_loser_elo
+            data['players'][winner]['matches_won'] += 1
+            data['players'][loser]['matches_lost'] += 1
+            data['players'][winner]['total_matches'] += 1
+            data['players'][loser]['total_matches'] += 1
+            match_record = {
+                'type': 'LD',
+                'winner': winner,
+                'loser': loser,
+                'participants': [winner, loser],
+                'winner_elo_change': new_winner_elo - winner_old_elo,
+                'loser_elo_change': new_loser_elo - loser_old_elo,
+                'date': datetime.now().isoformat()
+            }
+        else:  # PF
+            winning_team = request.form['winning_team']
+            losing_team = request.form['losing_team']
+            if winning_team == losing_team:
+                flash('A team cannot compete against itself!', 'error')
+                return render_template('record_match.html', data=data)
+            winner_old_elo = data['teams'][winning_team]['elo']
+            loser_old_elo = data['teams'][losing_team]['elo']
+            new_winner_elo, new_loser_elo = update_elo_ratings(winner_old_elo, loser_old_elo)
+            data['teams'][winning_team]['elo'] = new_winner_elo
+            data['teams'][losing_team]['elo'] = new_loser_elo
+            data['teams'][winning_team]['matches_won'] += 1
+            data['teams'][losing_team]['matches_lost'] += 1
+            data['teams'][winning_team]['total_matches'] += 1
+            data['teams'][losing_team]['total_matches'] += 1
+            for member in data['teams'][winning_team]['members']:
+                data['players'][member]['matches_won'] += 1
+                data['players'][member]['total_matches'] += 1
+            for member in data['teams'][losing_team]['members']:
+                data['players'][member]['matches_lost'] += 1
+                data['players'][member]['total_matches'] += 1
+            match_record = {
+                'type': 'PF',
+                'winning_team': winning_team,
+                'losing_team': losing_team,
+                'participants': data['teams'][winning_team]['members'] + data['teams'][losing_team]['members'],
+                'winner_elo_change': new_winner_elo - winner_old_elo,
+                'loser_elo_change': new_loser_elo - loser_old_elo,
+                'date': datetime.now().isoformat()
+            }
+        data['matches'].append(match_record)
+        save_data(data)
+        flash('Match recorded successfully!', 'success')
+        return redirect(url_for('index'))
+    return render_template('record_match.html', data=data)
+
+@app.route('/stories', methods=['GET', 'HEAD'])
+def stories():
+    """View all stories"""
+    data = load_data()
+    sorted_stories = sorted(data['stories'], key=lambda x: x['date'], reverse=True)
+    return render_template('stories.html', 
+        stories=sorted_stories, 
+        is_admin=requires_admin(),
+        is_logged_in=requires_login(),
+        current_user=get_current_user()
+    )
+
+@app.route('/add_story', methods=['GET', 'POST', 'HEAD'])
+def add_story():
+    """Add a new story - Admin only"""
+    if not requires_admin():
+        flash('Admin access required!', 'error')
+        return redirect(url_for('login'))
+    if request.method == 'POST':
+        title = request.form['title'].strip()
+        content = request.form['content'].strip()
+        if not title or not content:
+            flash('Title and content are required!', 'error')
+            return render_template('add_story.html')
+        data = load_data()
+        story = {
+            'id': len(data['stories']) + 1,
+            'title': title,
+            'content': content,
+            'date': datetime.now().isoformat(),
+            'author': get_current_user()['username']
+        }
+        data['stories'].append(story)
+        save_data(data)
+        flash('Story posted successfully!', 'success')
+        return redirect(url_for('stories'))
+    return render_template('add_story.html')
+
+@app.route('/rubrics')
+def rubrics():
+    """View all rubrics"""
+    data = load_data()
+    rubrics_data = data.get('rubrics', {})
+    return render_template('rubrics.html',
+        rubrics=rubrics_data,
+        is_admin=requires_admin(),
+        is_logged_in=requires_login(),
+        current_user=get_current_user(),
+        site_content=data['site_content']
+    )
+
+@app.route('/add_rubric', methods=['GET', 'POST'])
+def add_rubric():
+    data = load_data()
+    if request.method == 'POST':
+        title = request.form['title'].strip()
+        description = request.form['description'].strip()
+        criteria = request.form['criteria'].strip()
+        if not title or not criteria:
+            flash('Title and criteria are required!', 'error')
+            return render_template('add_rubric.html', data=data)
+        rubric_id = secrets.token_hex(8)
+        data['rubrics'][rubric_id] = {
+            'title': title,
+            'description': description,
+            'criteria': criteria,
+            'created_by': get_current_user()['username'],
+            'created_date': datetime.now().isoformat()
+        }
+        save_data(data)
+        flash('Rubric added!', 'success')
+        return redirect(url_for('rubrics'))
+    return render_template('add_rubric.html', data=data)
 
 if __name__ == '__main__':
     data = load_data()
