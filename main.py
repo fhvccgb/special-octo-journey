@@ -825,33 +825,28 @@ def rubrics():
                            is_logged_in=requires_login(),
                            current_user=get_current_user(),
                            site_content=data['site_content'])
-@app.route('/change_password/<user_id>', methods=['POST'])
-def change_password(user_id):
-    if not is_admin():
-        flash("Unauthorized.", "danger")
-        return redirect(url_for('index'))
-
-    new_password = request.form.get('new_password')
-    if not new_password:
-        flash("New password required.", "danger")
-        return redirect(url_for('user_management'))
+@app.route('/admin/change_password/<user_id>', methods=['POST'])
+def admin_change_password(user_id):
+    if not requires_admin():
+        return "Unauthorized", 403
 
     data = load_data()
-    if user_id in data['users']:
-        hashed = hashlib.sha256(new_password.encode()).hexdigest()
-        data['users'][user_id]['password'] = hashed
-        save_data(data)
+    user = data['users'].get(user_id)
 
-        admin_name = data['users'][session['user_id']]['username']
-        log_admin_action(f"Changed password for user {user_id}", admin_name)
+    if not user:
+        return "User not found", 404
 
-        flash("Password updated.", "success")
-    else:
-        flash("User not found.", "danger")
+    # Generate and set a new password
+    new_password = secrets.token_urlsafe(8)
+    user['password'] = hash_password(new_password)
+    save_data(data)
 
+    # Log the password reset
+    with open('admin_log.txt', 'a') as log_file:
+        log_file.write(f"[{datetime.now().isoformat()}] Admin {session['user_id']} reset password for user {user_id}\n")
+
+    flash(f"New password for {user['username']}: {new_password}", 'success')
     return redirect(url_for('user_management'))
-
-
 @app.route('/delete_user/<user_id>', methods=['POST'])
 def delete_user(user_id):
     if not is_admin():
