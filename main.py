@@ -681,10 +681,11 @@ def add_team():
     return render_template('create_team.html', players=pf_players)
 @app.route('/create_match_layout', methods=['GET', 'POST'])
 def create_match_layout_route():
-    data = load_data()  # Add this line
+    data = load_data()
     return render_template(
         'create_match_layout.html',
-        players=data['players'],  # Fix: add players to the template context
+        players=data['players'],
+        teams=data['teams'],  # ✅ add this line
         is_admin=requires_admin(),
         is_logged_in=requires_login(),
         current_user=get_current_user()
