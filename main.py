@@ -535,7 +535,28 @@ def admin_settings():
         return redirect(url_for('admin_settings'))
     
     return render_template('admin_settings.html', settings=data['settings'])
+ @app.route('/edit_website', methods=['GET', 'POST'])
+ def edit_website():
+    data = load_data()
+    
+    if request.method == 'POST':
+        if not requires_admin():
+            flash("You don't have permission to do that.", "danger")
+            return redirect(url_for('index'))
 
+        # Update site content in JSON
+        data['site_content']['title'] = request.form.get('title', '')
+        data['site_content']['team_motto'] = request.form.get('team_motto', '')
+        data['site_content']['welcome_message'] = request.form.get('welcome_message', '')
+        save_data(data)
+        flash("Website content updated!", "success")
+        return redirect(url_for('edit_website'))
+
+    return render_template('edit_website.html',
+                           is_admin=requires_admin(),
+                           is_logged_in=requires_login(),
+                           current_user=get_current_user(),
+                           site_content=data.get('site_content', {}))
 # Continue with existing routes...
 @app.route('/add_team', methods=['GET', 'POST', 'HEAD'])
 def add_team():
