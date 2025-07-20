@@ -525,20 +525,16 @@ def approve_user(user_id):
     
     return redirect(url_for('admin_panel'))
 
-@app.route('/make_admin/<user_id>')
+@app.route('/make_admin/<user_id>', methods=['POST'])
 def make_admin(user_id):
-    """Grant admin privileges - Admin only"""
-    if not requires_admin():
-        flash('Admin access required!', 'error')
-        return redirect(url_for('login'))
-    
     data = load_data()
     if user_id in data['users']:
         data['users'][user_id]['is_admin'] = True
         save_data(data)
-        flash('User granted admin privileges!', 'success')
-    
-    return redirect(url_for('admin_panel'))
+        flash('Team leader powers granted.', 'success')
+    else:
+        flash('User not found.', 'danger')
+    return redirect(url_for('user_management'))
 
 @app.route('/remove_admin/<user_id>')
 def remove_admin(user_id):
