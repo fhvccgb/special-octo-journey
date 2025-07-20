@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Welcome Section -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="club-header text-center rounded mb-3">
+                    <h1 class="mb-2">
+                        <i class="bi bi-trophy"></i>
+                        {{ site_content.title if site_content else 'Capital High School Debate Team' }}
+                    </h1>
+                    <p class="club-motto">{{ site_content.team_motto if site_content else 'Speak Truth, Seek Victory' }}</p>
+                </div>
+                <p class="card-text lead text-center">{{ site_content.welcome_message if site_content else 'Welcome to our debate club!' }}</p>
+                
+                {% if not is_logged_in %}
+                <div class="d-flex gap-2">
+                    <a href="{{ url_for('register') }}" class="btn btn-primary">
+                        <i class="bi bi-person-plus"></i> Join Our Team
+                    </a>
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-primary">
+                        <i class="bi bi-box-arrow-in-right"></i> Login
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Debate Formats -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="bi bi-people-fill club-accent"></i>
+                            Team Debates (PF)
+                        </h5>
+                        <p class="card-text">{{ site_content.pf_description if site_content else 'Team-based debate format (2v2)' }}</p>
+                        <a href="{{ url_for('public_forum') }}" class="btn btn-yellow">
+                            View Our Teams <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="bi bi-person-fill text-primary"></i>
+                            Solo Debates (LD)
+                        </h5>
+                        <p class="card-text">{{ site_content.ld_description if site_content else 'Individual debate format (1v1)' }}</p>
+                        <a href="{{ url_for('lincoln_douglas') }}" class="btn btn-primary">
+                            View Our Debaters <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <!-- Fun Facts -->
+        {% if data.get('feature_toggles', {}).get('fun_facts_enabled', true) and data.get('fun_content', {}).get('fun_facts') %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-lightbulb club-accent"></i> Did You Know?
+                </h5>
+            </div>
+            <div class="card-body">
+                {% set random_fact = data.fun_content.fun_facts | random %}
+                <p class="card-text">{{ random_fact }}</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Quote of the Day -->
+        {% if data.get('fun_content', {}).get('quote_of_the_day') %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-quote club-accent"></i> Quote of the Day
+                </h5>
+            </div>
+            <div class="card-body">
+                <blockquote class="blockquote mb-0">
+                    <p class="fst-italic">{{ data.fun_content.quote_of_the_day }}</p>
+                </blockquote>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Club Achievements -->
+        {% if data.get('feature_toggles', {}).get('achievements_enabled', true) and data.get('fun_content', {}).get('club_achievements') %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-award club-accent"></i> Our Achievements
+                </h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    {% for achievement in data.fun_content.club_achievements[:5] %}
+                    <li class="mb-2">
+                        <i class="bi bi-trophy-fill text-warning"></i>
+                        {{ achievement }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Quick Actions for Admins -->
+        {% if is_admin %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-gear"></i> Admin Quick Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('add_player') }}" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-person-plus"></i> Add Player
+                    </a>
+                    <a href="{{ url_for('add_team') }}" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-people"></i> Add Team
+                    </a>
+                    <a href="{{ url_for('record_match') }}" class="btn btn-outline-success btn-sm">
+                        <i class="bi bi-trophy"></i> Record Match
+                    </a>
+                    <a href="{{ url_for('add_story') }}" class="btn btn-outline-info btn-sm">
+                        <i class="bi bi-newspaper"></i> Add News
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Quick Links -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-link-45deg"></i> Quick Links
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    {% if settings and settings.forum_enabled %}
+                    <a href="{{ url_for('forum') }}" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-chat-dots"></i> Discussion Forum
+                    </a>
+                    {% endif %}
+                    <a href="{{ url_for('stories') }}" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-newspaper"></i> Latest News
+                    </a>
+                    <a href="{{ url_for('rubrics') }}" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-clipboard-check"></i> Rubrics
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Info -->
+        {% if is_logged_in and current_user %}
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-person-circle"></i> Welcome Back
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-1"><strong>Username:</strong> {{ current_user.username }}</p>
+                {% if current_user.player_name %}
+                <p class="mb-1"><strong>Player:</strong> 
+                    <a href="{{ url_for('player_profile', player_name=current_user.player_name) }}" class="text-decoration-none">
+                        {{ current_user.player_name }}
+                    </a>
+                </p>
+                {% endif %}
+                {% if current_user.is_admin %}
+                <span class="badge bg-primary">Administrator</span>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
