@@ -106,7 +106,7 @@ def get_current_user():
     data = load_data()
     return data['users'].get(session['user_id'])
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/register', methods=['GET', 'POST', 'HEAD'])
 def register():
     """User registration"""
     data = load_data()
@@ -159,7 +159,7 @@ def register():
     
     return render_template('register.html', players=load_data()['players'])
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST', 'HEAD'])
 def login():
     """User login"""
     if request.method == 'POST':
@@ -243,7 +243,7 @@ def lincoln_douglas():
                          current_user=get_current_user(),
                          site_content=data['site_content'])
 
-@app.route('/add_player', methods=['GET', 'POST'])
+@app.route('/add_player', methods=['GET', 'POST', 'HEAD'])
 def add_player():
     """Add a new player - Admin only"""
     if not requires_admin():
@@ -308,7 +308,7 @@ def forum():
                          is_logged_in=requires_login(),
                          current_user=get_current_user())
 
-@app.route('/add_forum_post', methods=['GET', 'POST'])
+@app.route('/add_forum_post', methods=['GET', 'POST', 'HEAD'])
 def add_forum_post():
     """Add a forum post"""
     if not requires_login():
@@ -350,7 +350,7 @@ def add_forum_post():
     
     return render_template('add_forum_post.html')
 
-@app.route('/moderate_forum')
+@app.route('/moderate_forum', methods=['GET', 'HEAD'])
 def moderate_forum():
     """Forum moderation panel - Admin only"""
     if not requires_admin():
@@ -424,7 +424,7 @@ def unban_user(user_id):
     
     return redirect(url_for('moderate_forum'))
 
-@app.route('/admin_panel')
+@app.route('/admin_panel', methods=['GET', 'HEAD'])
 def admin_panel():
     """Main admin panel"""
     if not requires_admin():
@@ -486,7 +486,7 @@ def remove_admin(user_id):
     
     return redirect(url_for('admin_panel'))
 
-@app.route('/site_editor', methods=['GET', 'POST'])
+@app.route('/site_editor', methods=['GET', 'POST', 'HEAD'])
 def site_editor():
     """Website content editor - Admin only"""
     if not requires_admin():
@@ -508,7 +508,7 @@ def site_editor():
     
     return render_template('site_editor.html', site_content=data['site_content'])
 
-@app.route('/admin_settings', methods=['GET', 'POST'])
+@app.route('/admin_settings', methods=['GET', 'POST', 'HEAD'])
 def admin_settings():
     """Admin settings - Admin only"""
     if not requires_admin():
@@ -531,7 +531,7 @@ def admin_settings():
     return render_template('admin_settings.html', settings=data['settings'])
 
 # Continue with existing routes...
-@app.route('/create_team', methods=['GET', 'POST'])
+@app.route('/create_team', methods=['GET', 'POST', 'HEAD'])
 def create_team():
     """Create a new PF team - Admin only"""
     if not requires_admin():
@@ -572,7 +572,7 @@ def create_team():
     
     return render_template('create_team.html', players=pf_players)
 
-@app.route('/record_match', methods=['GET', 'POST'])
+@app.route('/record_match', methods=['GET', 'POST', 'HEAD'])
 def record_match():
     """Record a match result - Admin only"""
     if not requires_admin():
@@ -670,7 +670,7 @@ def stories():
                          is_logged_in=requires_login(),
                          current_user=get_current_user())
 
-@app.route('/add_story', methods=['GET', 'POST'])
+@app.route('/add_story', methods=['GET', 'POST', 'HEAD'])
 def add_story():
     """Add a new story - Admin only"""
     if not requires_admin():
