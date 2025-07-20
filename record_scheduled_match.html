@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Record Scheduled Match{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title mb-0">
+                        <i class="bi bi-clipboard-check"></i> Record Match Result
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <strong>{{ match.format }}</strong> Match #{{ match.id }}
+                        {% if match.judge %}
+                            <br><small>Judge: <span class="badge bg-success">{{ match.judge }}</span></small>
+                        {% endif %}
+                        <br><small class="text-muted">Scheduled: {{ match.date_created[:19] }}</small>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col text-center">
+                            <div class="card border-primary">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ match.participant1 }}</h5>
+                                    <p class="card-text">
+                                        <span class="badge bg-info">
+                                            Elo: {{ data['players'][match.participant1].elo if match.format == 'LD' else data['teams'][match.participant1].elo }}
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-auto align-self-center">
+                            <h3 class="text-muted">VS</h3>
+                        </div>
+                        <div class="col text-center">
+                            <div class="card border-primary">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ match.participant2 }}</h5>
+                                    <p class="card-text">
+                                        <span class="badge bg-info">
+                                            Elo: {{ data['players'][match.participant2].elo if match.format == 'LD' else data['teams'][match.participant2].elo }}
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form method="post">
+                        <div class="mb-3">
+                            <label for="winner" class="form-label">Select Winner</label>
+                            <select name="winner" id="winner" class="form-select" required>
+                                <option value="">Choose winner...</option>
+                                <option value="{{ match.participant1 }}">{{ match.participant1 }}</option>
+                                <option value="{{ match.participant2 }}">{{ match.participant2 }}</option>
+                            </select>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('admin') }}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Back to Admin
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check-circle"></i> Record Result
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

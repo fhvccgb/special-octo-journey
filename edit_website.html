@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Website - {{ super() }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title mb-0">
+                        <i class="bi bi-palette"></i> Edit Website Content
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="title" class="form-label">Website Title</label>
+                                    <input type="text" class="form-control" id="title" name="title" 
+                                           value="{{ site_content.title }}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="club_name" class="form-label">Club Name</label>
+                                    <input type="text" class="form-control" id="club_name" name="club_name" 
+                                           value="{{ site_content.club_name }}" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="welcome_message" class="form-label">Welcome Message</label>
+                            <textarea class="form-control" id="welcome_message" name="welcome_message" 
+                                      rows="3" required>{{ site_content.welcome_message }}</textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="team_motto" class="form-label">Club Motto</label>
+                            <input type="text" class="form-control" id="team_motto" name="team_motto" 
+                                   value="{{ site_content.team_motto }}" required>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="pf_description" class="form-label">Public Forum Description</label>
+                                    <textarea class="form-control" id="pf_description" name="pf_description" 
+                                              rows="3" required>{{ site_content.pf_description }}</textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="ld_description" class="form-label">Lincoln-Douglas Description</label>
+                                    <textarea class="form-control" id="ld_description" name="ld_description" 
+                                              rows="3" required>{{ site_content.ld_description }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i> 
+                            Changes will be visible immediately across the entire website.
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('admin') }}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Back to Admin
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

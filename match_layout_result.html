@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Match Layout Result{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title mb-0">
+                        <i class="bi bi-diagram-3"></i> Proposed Match Layout - {{ format }}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    {% if matches %}
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i> 
+                            Generated {{ matches|length }} optimal match{{ 'es' if matches|length != 1 else '' }} based on Elo ratings and judge availability.
+                        </div>
+
+                        <div class="row">
+                            {% for match in matches %}
+                            <div class="col-md-6 mb-3">
+                                <div class="card border-primary">
+                                    <div class="card-header bg-primary text-white">
+                                        <h6 class="card-title mb-0">
+                                            <i class="bi bi-trophy"></i> Match {{ loop.index }}
+                                            <span class="badge bg-light text-dark ms-2">Elo Diff: {{ match.elo_diff }}</span>
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row mb-2">
+                                            <div class="col">
+                                                <strong>{{ match.participant1[0] }}</strong>
+                                                {% if format == 'PF' %}
+                                                    <br><small class="text-muted">{{ match.participant1[1].player1 }} & {{ match.participant1[1].player2 }}</small>
+                                                {% endif %}
+                                                <br><span class="badge bg-info">Elo: {{ match.participant1[1].elo }}</span>
+                                            </div>
+                                            <div class="col-auto align-self-center">
+                                                <h4 class="text-muted mb-0">VS</h4>
+                                            </div>
+                                            <div class="col text-end">
+                                                <strong>{{ match.participant2[0] }}</strong>
+                                                {% if format == 'PF' %}
+                                                    <br><small class="text-muted">{{ match.participant2[1].player1 }} & {{ match.participant2[1].player2 }}</small>
+                                                {% endif %}
+                                                <br><span class="badge bg-info">Elo: {{ match.participant2[1].elo }}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        {% if match.judge %}
+                                        <div class="border-top pt-2">
+                                            <small class="text-muted">Judge:</small>
+                                            <div class="badge bg-success">
+                                                <i class="bi bi-person-badge"></i> {{ match.judge[0] }}
+                                            </div>
+                                        </div>
+                                        {% else %}
+                                        <div class="border-top pt-2">
+                                            <small class="text-warning">
+                                                <i class="bi bi-exclamation-triangle"></i> No judge available for this match
+                                            </small>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <a href="{{ url_for('create_match_layout_route') }}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Back to Setup
+                            </a>
+                            <form method="post" action="{{ url_for('confirm_match_layout') }}" style="display: inline;">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="bi bi-check-circle"></i> Confirm Layout
+                                </button>
+                            </form>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle"></i> 
+                            No matches could be generated. Please ensure you have selected enough participants.
+                        </div>
+                        <a href="{{ url_for('create_match_layout_route') }}" class="btn btn-primary">
+                            <i class="bi bi-arrow-left"></i> Back to Setup
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

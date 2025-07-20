@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - {{ super() }}{% endblock %}
+
+{% block content %}
+<div class="club-header text-center rounded mb-4">
+    <h1><i class="bi bi-star"></i> Team Leader Control Panel</h1>
+    <p class="club-motto mb-0">Manage and grow our debate club</p>
+</div>
+
+<div class="row">
+    <div class="col-md-3 mb-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="bi bi-people display-4 text-primary"></i>
+                <h5 class="card-title mt-2">{{ data.players|length }}</h5>
+                <p class="card-text">Players</p>
+                <a href="{{ url_for('add_player') }}" class="btn btn-primary btn-sm">Add Player</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="bi bi-people-fill display-4 text-info"></i>
+                <h5 class="card-title mt-2">{{ data.teams|length }}</h5>
+                <p class="card-text">Teams</p>
+                <a href="{{ url_for('add_team') }}" class="btn btn-info btn-sm">Add Team</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="bi bi-trophy display-4 text-success"></i>
+                <h5 class="card-title mt-2">{{ data.matches|length }}</h5>
+                <p class="card-text">Matches</p>
+                <a href="{{ url_for('record_match') }}" class="btn btn-success btn-sm">Record Match</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="bi bi-person-check display-4 text-warning"></i>
+                <h5 class="card-title mt-2">{{ data.users|length }}</h5>
+                <p class="card-text">Users</p>
+                <a href="{{ url_for('user_management') }}" class="btn btn-warning btn-sm">Manage Users</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('create_match_layout_route') }}" class="btn btn-primary">
+                        <i class="bi bi-diagram-3"></i> Create Match Layout
+                    </a>
+                    <a href="{{ url_for('add_player') }}" class="btn btn-outline-primary">
+                        <i class="bi bi-person-plus"></i> Add Club Member
+                    </a>
+                    <a href="{{ url_for('add_team') }}" class="btn btn-outline-yellow">
+                        <i class="bi bi-people"></i> Create New Team
+                    </a>
+                    <a href="{{ url_for('record_match') }}" class="btn btn-outline-primary">
+                        <i class="bi bi-trophy"></i> Record Match Result
+                    </a>
+                    <a href="{{ url_for('edit_website') }}" class="btn btn-yellow">
+                        <i class="bi bi-palette"></i> Edit Website Content
+                    </a>
+                    <a href="{{ url_for('admin_settings') }}" class="btn btn-outline-warning">
+                        <i class="bi bi-sliders"></i> Club Feature Settings
+                    </a>
+                    <a href="{{ url_for('add_story') }}" class="btn btn-outline-secondary">
+                        <i class="bi bi-newspaper"></i> Add News Story
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">System Management</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('user_management') }}" class="btn btn-outline-warning">
+                        <i class="bi bi-people"></i> User Management
+                    </a>
+                    <a href="{{ url_for('moderate_forum') }}" class="btn btn-outline-danger">
+                        <i class="bi bi-shield-check"></i> Moderate Forum
+                    </a>
+                    <a href="{{ url_for('rubrics') }}" class="btn btn-outline-primary">
+                        <i class="bi bi-clipboard-check"></i> Manage Rubrics
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Recent Activity</h5>
+            </div>
+            <div class="card-body">
+                {% set scheduled_matches = data.matches | selectattr('status', 'equalto', 'scheduled') | list %}
+                {% if scheduled_matches %}
+                <h6>Scheduled Matches:</h6>
+                <div class="table-responsive mb-4">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Format</th>
+                                <th>Participants</th>
+                                <th>Judge</th>
+                                <th>Elo Diff</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for match in scheduled_matches %}
+                            <tr>
+                                <td>
+                                    <span class="badge bg-{{ 'info' if match.format == 'PF' else 'warning' }}">
+                                        {{ match.format }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <strong>{{ match.participant1 }}</strong> vs <strong>{{ match.participant2 }}</strong>
+                                </td>
+                                <td>
+                                    {% if match.judge %}
+                                        <span class="badge bg-success">{{ match.judge }}</span>
+                                    {% else %}
+                                        <span class="text-muted">No judge</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ match.elo_diff }}</td>
+                                <td>
+                                    <a href="{{ url_for('record_scheduled_match', match_id=match.id) }}" class="btn btn-sm btn-success">
+                                        <i class="bi bi-check-circle"></i> Record Result
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+
+                <h6>Recent Completed Matches:</h6>
+                {% set completed_matches = data.matches | rejectattr('status', 'equalto', 'scheduled') | list %}
+                {% if completed_matches %}
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Format</th>
+                                <th>Winner</th>
+                                <th>Loser</th>
+                                <th>Judge</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for match in completed_matches[-5:] %}
+                            <tr>
+                                <td>
+                                    {% if match.get('date_completed') %}
+                                        {{ match.date_completed[:19] }}
+                                    {% else %}
+                                        {{ match.date[:19] if match.get('date') else match.get('date_created', '')[:19] }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge bg-{{ 'info' if match.format == 'PF' else 'warning' }}">
+                                        {{ match.format }}
+                                    </span>
+                                </td>
+                                <td class="text-success">{{ match.get('winner', 'TBD') }}</td>
+                                <td class="text-danger">{{ match.get('loser', 'TBD') }}</td>
+                                <td>
+                                    {% if match.get('judge') %}
+                                        <span class="badge bg-success">{{ match.judge }}</span>
+                                    {% else %}
+                                        <span class="text-muted">No judge</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted">No matches recorded yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

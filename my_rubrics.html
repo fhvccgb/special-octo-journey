@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block title %}My Rubrics - {{ super() }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="club-header text-center rounded mb-4">
+        <h1><i class="bi bi-clipboard-check"></i> My Judge Rubrics</h1>
+        <p class="club-motto mb-0">Create and manage your judging standards</p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <!-- My Rubrics -->
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-person-gear"></i> My Rubrics ({{ my_rubrics|length }})
+                    </h5>
+                    {% if is_admin %}
+                    <a href="{{ url_for('add_rubric') }}" class="btn btn-primary btn-sm">
+                        <i class="bi bi-plus-circle"></i> Create New
+                    </a>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    {% if my_rubrics %}
+                    <div class="row">
+                        {% for rubric_id, rubric in my_rubrics.items() %}
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 {% if rubric.is_public %}border-success{% endif %}">
+                                <div class="card-body">
+                                    <h6 class="card-title">
+                                        {{ rubric.title }}
+                                        {% if rubric.is_public %}
+                                        <span class="badge bg-success ms-2">Public</span>
+                                        {% else %}
+                                        <span class="badge bg-secondary ms-2">Private</span>
+                                        {% endif %}
+                                    </h6>
+                                    <p class="card-text text-muted small">{{ rubric.description[:100] }}{% if rubric.description|length > 100 %}...{% endif %}</p>
+                                    <p class="card-text">
+                                        <small class="text-muted">
+                                            <i class="bi bi-calendar"></i> {{ rubric.created_date[:10] }}<br>
+                                            <i class="bi bi-list-check"></i> {{ rubric.criteria|length }} criteria
+                                        </small>
+                                    </p>
+                                </div>
+                                <div class="card-footer bg-transparent">
+                                    <div class="btn-group w-100">
+                                        <a href="{{ url_for('view_rubric', rubric_id=rubric_id) }}" class="btn btn-outline-primary btn-sm">
+                                            <i class="bi bi-eye"></i> View
+                                        </a>
+                                        {% if is_admin %}
+                                        <a href="{{ url_for('edit_rubric', rubric_id=rubric_id) }}" class="btn btn-outline-warning btn-sm">
+                                            <i class="bi bi-pencil"></i> Edit
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="bi bi-clipboard display-1 text-muted"></i>
+                        <h4 class="mt-3">No Personal Rubrics Yet</h4>
+                        <p class="text-muted">Create your first judging rubric to get started!</p>
+                        {% if is_admin %}
+                        <a href="{{ url_for('add_rubric') }}" class="btn btn-primary">
+                            <i class="bi bi-plus-circle"></i> Create My First Rubric
+                        </a>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Public Rubrics from Others -->
+            {% if public_rubrics %}
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-share"></i> Public Rubrics from Team ({{ public_rubrics|length }})
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for rubric_id, rubric in public_rubrics.items() %}
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-info">
+                                <div class="card-body">
+                                    <h6 class="card-title">
+                                        {{ rubric.title }}
+                                        <span class="badge bg-info ms-2">Public</span>
+                                    </h6>
+                                    <p class="card-text text-muted small">{{ rubric.description[:100] }}{% if rubric.description|length > 100 %}...{% endif %}</p>
+                                    <p class="card-text">
+                                        <small class="text-muted">
+                                            <i class="bi bi-person"></i> {{ rubric.created_by }}<br>
+                                            <i class="bi bi-calendar"></i> {{ rubric.created_date[:10] }}<br>
+                                            <i class="bi bi-list-check"></i> {{ rubric.criteria|length }} criteria
+                                        </small>
+                                    </p>
+                                </div>
+                                <div class="card-footer bg-transparent">
+                                    <a href="{{ url_for('view_rubric', rubric_id=rubric_id) }}" class="btn btn-outline-info btn-sm w-100">
+                                        <i class="bi bi-eye"></i> View Rubric
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="bi bi-info-circle"></i> Rubric Tips</h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="bi bi-lightbulb club-accent"></i>
+                            <strong>Clear Criteria:</strong> Make specific, measurable criteria
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-target club-accent"></i>
+                            <strong>Point Values:</strong> Use consistent point scales
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-share club-accent"></i>
+                            <strong>Share Knowledge:</strong> Make good rubrics public
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-bookmark club-accent"></i>
+                            <strong>Categories:</strong> Organize by debate format
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            {% if is_admin %}
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="bi bi-tools"></i> Quick Actions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('add_rubric') }}" class="btn btn-primary">
+                            <i class="bi bi-plus-circle"></i> New Rubric
+                        </a>
+                        <a href="{{ url_for('rubrics') }}" class="btn btn-outline-primary">
+                            <i class="bi bi-list"></i> All Club Rubrics
+                        </a>
+                        <a href="{{ url_for('admin_settings') }}" class="btn btn-outline-warning">
+                            <i class="bi bi-sliders"></i> Feature Settings
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

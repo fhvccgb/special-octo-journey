@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Settings - {{ super() }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="club-header text-center rounded mb-4">
+        <h1><i class="bi bi-sliders"></i> Club Feature Settings</h1>
+        <p class="club-motto mb-0">Customize your club's website experience</p>
+    </div>
+
+    <form method="post">
+        <div class="row">
+            <!-- Feature Toggles -->
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-toggles"></i> Feature Controls</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="forum_enabled" name="forum_enabled" 
+                                           {% if data.feature_toggles.forum_enabled %}checked{% endif %}>
+                                    <label class="form-check-label" for="forum_enabled">
+                                        <i class="bi bi-chat-dots"></i> Discussion Forum
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="elo_visible" name="elo_visible"
+                                           {% if data.feature_toggles.elo_visible %}checked{% endif %}>
+                                    <label class="form-check-label" for="elo_visible">
+                                        <i class="bi bi-graph-up"></i> Show Elo Ratings
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="rankings_enabled" name="rankings_enabled"
+                                           {% if data.feature_toggles.rankings_enabled %}checked{% endif %}>
+                                    <label class="form-check-label" for="rankings_enabled">
+                                        <i class="bi bi-trophy"></i> Rankings & Leaderboards
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="match_history_visible" name="match_history_visible"
+                                           {% if data.feature_toggles.match_history_visible %}checked{% endif %}>
+                                    <label class="form-check-label" for="match_history_visible">
+                                        <i class="bi bi-clock-history"></i> Match History
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="player_profiles_enabled" name="player_profiles_enabled"
+                                           {% if data.feature_toggles.player_profiles_enabled %}checked{% endif %}>
+                                    <label class="form-check-label" for="player_profiles_enabled">
+                                        <i class="bi bi-person-badge"></i> Player Profiles
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="team_stats_enabled" name="team_stats_enabled"
+                                           {% if data.feature_toggles.team_stats_enabled %}checked{% endif %}>
+                                    <label class="form-check-label" for="team_stats_enabled">
+                                        <i class="bi bi-bar-chart"></i> Team Statistics
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="rubrics_enabled" name="rubrics_enabled"
+                                           {% if data.feature_toggles.rubrics_enabled %}checked{% endif %}>
+                                    <label class="form-check-label" for="rubrics_enabled">
+                                        <i class="bi bi-clipboard-check"></i> Judge Rubrics
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="news_enabled" name="news_enabled"
+                                           {% if data.feature_toggles.news_enabled %}checked{% endif %}>
+                                    <label class="form-check-label" for="news_enabled">
+                                        <i class="bi bi-newspaper"></i> Team News
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="fun_facts_enabled" name="fun_facts_enabled"
+                                           {% if data.feature_toggles.fun_facts_enabled %}checked{% endif %}>
+                                    <label class="form-check-label" for="fun_facts_enabled">
+                                        <i class="bi bi-lightbulb"></i> Fun Facts
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="achievements_enabled" name="achievements_enabled"
+                                           {% if data.feature_toggles.achievements_enabled %}checked{% endif %}>
+                                    <label class="form-check-label" for="achievements_enabled">
+                                        <i class="bi bi-award"></i> Club Achievements
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <hr>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="tournament_mode" name="tournament_mode"
+                                   {% if data.feature_toggles.tournament_mode %}checked{% endif %}>
+                            <label class="form-check-label" for="tournament_mode">
+                                <i class="bi bi-flag"></i> <strong>Tournament Mode</strong>
+                                <small class="text-muted d-block">Enhanced competition features</small>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Fun Content -->
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-emoji-smile"></i> Fun Content</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="quote_of_the_day" class="form-label">Quote of the Day</label>
+                            <textarea class="form-control" id="quote_of_the_day" name="quote_of_the_day" rows="3" 
+                                      placeholder="Inspiring debate quote...">{{ data.fun_content.quote_of_the_day if data.fun_content else '' }}</textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Club Achievements</label>
+                            {% set achievements = data.fun_content.club_achievements if data.fun_content else [] %}
+                            {% for i in range(5) %}
+                            <div class="input-group mb-2">
+                                <span class="input-group-text"><i class="bi bi-award"></i></span>
+                                <input type="text" class="form-control" name="achievement_{{ i }}" 
+                                       value="{{ achievements[i] if i < achievements|length else '' }}"
+                                       placeholder="Achievement {{ i + 1 }}...">
+                            </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Fun Facts</label>
+                            {% set fun_facts = data.fun_content.fun_facts if data.fun_content else [] %}
+                            {% for i in range(5) %}
+                            <div class="input-group mb-2">
+                                <span class="input-group-text"><i class="bi bi-lightbulb"></i></span>
+                                <input type="text" class="form-control" name="fun_fact_{{ i }}" 
+                                       value="{{ fun_facts[i] if i < fun_facts|length else '' }}"
+                                       placeholder="Did you know...">
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a href="{{ url_for('admin') }}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Dashboard
+            </a>
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-check-circle"></i> Save Settings
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

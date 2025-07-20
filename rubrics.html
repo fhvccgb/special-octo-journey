@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}Rubrics - {{ super() }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>
+        <i class="bi bi-clipboard-check"></i>
+        Debate Rubrics
+    </h1>
+    {% if is_admin %}
+    <a href="{{ url_for('add_rubric') }}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Add Rubric
+    </a>
+    {% endif %}
+</div>
+
+{% if rubrics %}
+<div class="row">
+    {% for rubric_id, rubric in rubrics.items() %}
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">{{ rubric.title }}</h5>
+                <small class="text-muted">Created by {{ rubric.created_by }} on {{ rubric.created_date[:10] }}</small>
+            </div>
+            <div class="card-body">
+                <p>{{ rubric.description }}</p>
+                
+                <h6>Evaluation Criteria:</h6>
+                <div class="border rounded p-3" style="background-color: #f8f9fa;">
+                    <pre style="white-space: pre-wrap; font-family: inherit; margin: 0;">{{ rubric.criteria }}</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="text-center py-5">
+    <i class="bi bi-clipboard-check display-1 text-muted"></i>
+    <h3 class="mt-3">No Rubrics Available</h3>
+    <p class="text-muted">Rubrics will be posted here for judging and evaluation.</p>
+    {% if is_admin %}
+    <a href="{{ url_for('add_rubric') }}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Add First Rubric
+    </a>
+    {% endif %}
+</div>
+{% endif %}
+
+<!-- Default Rubric Information -->
+<div class="row mt-5">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Public Forum Scoring</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between">
+                        Content & Analysis <span class="badge bg-info">30 pts</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        Evidence & Research <span class="badge bg-info">25 pts</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        Organization & Clarity <span class="badge bg-info">20 pts</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        Delivery & Speaking <span class="badge bg-info">15 pts</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        Crossfire Performance <span class="badge bg-info">10 pts</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Lincoln-Douglas Scoring</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between">
+                        Framework & Values <span class="badge bg-warning">30 pts</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        Argumentation <span class="badge bg-warning">25 pts</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        Evidence & Logic <span class="badge bg-warning">20 pts</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        Refutation <span class="badge bg-warning">15 pts</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        Speaking & Style <span class="badge bg-warning">10 pts</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Rubric Modal -->
+{% if is_admin %}
+<div class="modal fade" id="addRubricModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Rubric</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addRubricForm">
+                    <div class="mb-3">
+                        <label for="rubricName" class="form-label">Rubric Name</label>
+                        <input type="text" class="form-control" id="rubricName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="rubricFormat" class="form-label">Format</label>
+                        <select class="form-select" id="rubricFormat">
+                            <option value="">General</option>
+                            <option value="PF">Public Forum</option>
+                            <option value="LD">Lincoln-Douglas</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="rubricDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="rubricDescription" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="addRubric()">Add Rubric</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function addRubric() {
+    // Note: This would need to be implemented as a proper route
+    alert('Add rubric functionality would be implemented here');
+    document.getElementById('addRubricModal').querySelector('.btn-close').click();
+}
+</script>
+{% endif %}
+{% endblock %}

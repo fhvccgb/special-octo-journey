@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Create Match Layout{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title mb-0">
+                        <i class="bi bi-diagram-3"></i> Create Match Layout
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Create optimal match pairings based on Elo ratings with automated judge assignments.</p>
+                    
+                    <form method="post">
+                        <div class="mb-3">
+                            <label for="format" class="form-label">Debate Format</label>
+                            <select name="format" id="format" class="form-select" required onchange="updateParticipantList()">
+                                <option value="">Select Format</option>
+                                <option value="LD">Lincoln-Douglas (Individual)</option>
+                                <option value="PF">Public Forum (Teams)</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3" id="participants-section" style="display: none;">
+                            <label class="form-label">Present Participants</label>
+                            <div class="border rounded p-3" style="max-height: 300px; overflow-y: auto;">
+                                <div id="ld-participants" style="display: none;">
+                                    {% for name, player in players.items() %}
+                                        {% if 'LD' in player.get('formats', []) %}
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="present_participants" value="{{ name }}" id="ld_{{ name }}">
+                                            <label class="form-check-label" for="ld_{{ name }}">
+                                                {{ name }} 
+                                                <span class="badge bg-info">Elo: {{ player.elo }}</span>
+                                                <span class="badge bg-secondary">{{ player.matches_won }}W-{{ player.matches_lost }}L</span>
+                                            </label>
+                                        </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                
+                                <div id="pf-participants" style="display: none;">
+                                    {% for name, team in teams.items() %}
+                                        {% if team.get('format') == 'PF' %}
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="present_participants" value="{{ name }}" id="pf_{{ name }}">
+                                            <label class="form-check-label" for="pf_{{ name }}">
+                                                {{ name }} 
+                                                <span class="text-muted">({{ team.player1 }} & {{ team.player2 }})</span>
+                                                <span class="badge bg-info">Elo: {{ team.elo }}</span>
+                                                <span class="badge bg-secondary">{{ team.matches_won }}W-{{ team.matches_lost }}L</span>
+                                            </label>
+                                        </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="form-text">Select all participants who are present and available to compete.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Potential Judges</label>
+                            <div class="border rounded p-3" style="max-height: 200px; overflow-y: auto;">
+                                {% for name, player in players.items() %}
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="potential_judges" value="{{ name }}" id="judge_{{ name }}">
+                                    <label class="form-check-label" for="judge_{{ name }}">
+                                        {{ name }}
+                                        <span class="badge bg-success">Judge</span>
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div class="form-text">Select all players who can serve as judges. The system will automatically assign judges to avoid conflicts and rotate fairly.</div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-magic"></i> Generate Match Layout
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function updateParticipantList() {
+    const format = document.getElementById('format').value;
+    const participantsSection = document.getElementById('participants-section');
+    const ldParticipants = document.getElementById('ld-participants');
+    const pfParticipants = document.getElementById('pf-participants');
+    
+    if (format) {
+        participantsSection.style.display = 'block';
+        
+        if (format === 'LD') {
+            ldParticipants.style.display = 'block';
+            pfParticipants.style.display = 'none';
+        } else if (format === 'PF') {
+            ldParticipants.style.display = 'none';
+            pfParticipants.style.display = 'block';
+        }
+    } else {
+        participantsSection.style.display = 'none';
+    }
+}
+</script>
+{% endblock %}

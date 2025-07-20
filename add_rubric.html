@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Add Rubric{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title mb-0">
+                        <i class="bi bi-clipboard-check"></i> Add New Rubric
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Rubric Title</label>
+                            <input type="text" class="form-control" id="title" name="title" required 
+                                   placeholder="e.g., Public Forum Judging Criteria">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="3" required
+                                      placeholder="Brief description of when and how to use this rubric"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="criteria" class="form-label">Judging Criteria</label>
+                            <textarea class="form-control" id="criteria" name="criteria" rows="8" required
+                                      placeholder="List the specific criteria judges should evaluate. For example:
+
+1. Argument Quality (30 points)
+   - Logical reasoning and evidence
+   - Clear claims and warrants
+   - Effective use of sources
+
+2. Delivery and Presentation (25 points)
+   - Clear speaking and pace
+   - Eye contact and confidence
+   - Effective use of time
+
+3. Refutation and Defense (25 points)
+   - Addresses opponent's arguments
+   - Defends own position effectively
+   - Strategic choices in debate
+
+4. Cross-examination (20 points)
+   - Effective questioning
+   - Clear answers
+   - Professional conduct"></textarea>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('rubrics') }}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Back to Rubrics
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-plus-circle"></i> Add Rubric
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

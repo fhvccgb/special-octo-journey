@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}My Account - {{ super() }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-person-circle"></i> Account Info
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <i class="bi bi-person-circle display-1 text-primary"></i>
+                        <h4>{{ user.username }}</h4>
+                        {% if user.is_admin %}
+                            <span class="badge bg-danger">Team Leader</span>
+                        {% endif %}
+                    </div>
+                    
+                    <dl class="row">
+                        <dt class="col-sm-4">Email:</dt>
+                        <dd class="col-sm-8">{{ user.email }}</dd>
+                        
+                        <dt class="col-sm-4">Joined:</dt>
+                        <dd class="col-sm-8">{{ user.created_date[:10] }}</dd>
+                        
+                        {% if user.player_name %}
+                        <dt class="col-sm-4">Player:</dt>
+                        <dd class="col-sm-8">
+                            <a href="{{ url_for('player_profile', player_name=user.player_name) }}" class="btn btn-sm btn-outline-primary">
+                                {{ user.player_name }}
+                            </a>
+                        </dd>
+                        {% endif %}
+                    </dl>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            {% if player_stats %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-trophy"></i> My Debate Stats
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3">
+                            <div class="stat-card p-3">
+                                <div class="elo-display">{{ player_stats.elo }}</div>
+                                <div class="text-muted">Elo Rating</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card p-3">
+                                <div class="elo-display text-success">{{ player_stats.matches_won }}</div>
+                                <div class="text-muted">Wins</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card p-3">
+                                <div class="elo-display text-danger">{{ player_stats.matches_lost }}</div>
+                                <div class="text-muted">Losses</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card p-3">
+                                <div class="elo-display">{{ player_stats.total_matches }}</div>
+                                <div class="text-muted">Total</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% if recent_matches %}
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-clock-history"></i> Recent Matches
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% for match in recent_matches %}
+                    <div class="d-flex justify-content-between align-items-center p-3 mb-2 
+                                {% if match.winner == user.player_name %}match-win{% else %}match-loss{% endif %}">
+                        <div>
+                            <strong>{{ match.format }}</strong> - 
+                            {% if match.winner == user.player_name %}
+                                <span class="victory-highlight">Victory</span> vs {{ match.loser }}
+                            {% else %}
+                                <span class="text-muted">Loss</span> to {{ match.winner }}
+                            {% endif %}
+                        </div>
+                        <small class="text-muted">{{ match.date[:10] if match.date else match.date_completed[:10] }}</small>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            {% else %}
+            <div class="card">
+                <div class="card-body text-center">
+                    <i class="bi bi-person-plus display-1 text-muted"></i>
+                    <h4>Not Linked to Player</h4>
+                    <p class="text-muted">Your account is not linked to a debate player profile. Contact a team leader to get added to the roster!</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
