@@ -81,12 +81,12 @@
                                         {% endif %}
 
                                         <form method="POST" action="{{ url_for('admin_change_password', user_id=user_id) }}" style="display:inline;">
-                                            <button type="submit" class="btn btn-primary"
-                                                    onclick="return confirm('Reset password for {{ user.username }}?')"
-                                                    title="Reset Password">
-                                                <i class="bi bi-key"></i>
-                                            </button>
-                                        </form>
+                                           <button type="submit" class="btn btn-primary"
+                                                   onclick="return confirm('Reset password for {{ user.username }}?')"
+                                                   title="Reset Password">
+                                               <i class="bi bi-key"></i>
+                                           </button>
+                                       </form>
 
                                         <form method="POST" action="{{ url_for('admin_delete_user', user_id=user_id) }}" style="display:inline;">
                                             <button type="submit" class="btn btn-danger"
