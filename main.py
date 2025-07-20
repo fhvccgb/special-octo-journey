@@ -200,7 +200,7 @@ def logout():
     flash('Logged out successfully', 'success')
     return redirect(url_for('index'))
 
-@app.route('/')
+@app.route('/', methods=['GET', 'HEAD'])
 def index():
     """Main homepage"""
     data = load_data()
