@@ -700,7 +700,18 @@ def add_story():
         return redirect(url_for('stories'))
     
     return render_template('add_story.html')
-
+@app.route('/rubrics')
+def rubrics():
+    """View all rubrics"""
+    data = load_data()
+    rubrics_data = data.get('rubrics', {})
+    
+    return render_template('rubrics.html',
+                           rubrics=rubrics_data,
+                           is_admin=requires_admin(),
+                           is_logged_in=requires_login(),
+                           current_user=get_current_user(),
+                           site_content=data['site_content'])
 if __name__ == '__main__':
     # Create default admin account if no users exist
     data = load_data()
