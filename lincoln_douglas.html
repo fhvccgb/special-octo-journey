@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Lincoln-Douglas - {{ super() }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>
+        <i class="bi bi-person-fill text-warning"></i>
+        Lincoln-Douglas Debaters
+    </h1>
+    {% if is_admin %}
+    <a href="{{ url_for('add_player') }}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Add Player
+    </a>
+    {% endif %}
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        {% if players %}
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Player Rankings</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Rank</th>
+                                <th>Player</th>
+                                <th>Elo Rating</th>
+                                <th>Record</th>
+                                <th>Formats</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for player_name, player in players %}
+                            <tr>
+                                <td>
+                                    <span class="badge bg-primary">{{ loop.index }}</span>
+                                </td>
+                                <td>
+                                    <strong>{{ player_name }}</strong>
+                                </td>
+                                <td>
+                                    <span class="badge bg-warning">{{ player.elo }}</span>
+                                </td>
+                                <td>
+                                    <small>
+                                        <span class="text-success">{{ player.matches_won }}W</span> - 
+                                        <span class="text-danger">{{ player.matches_lost }}L</span>
+                                    </small>
+                                </td>
+                                <td>
+                                    {% for format in player.formats %}
+                                    <span class="badge bg-secondary">{{ format }}</span>
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('player_profile', player_name=player_name) }}" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="alert alert-info" role="alert">
+            <i class="bi bi-info-circle"></i>
+            No Lincoln-Douglas debaters found. 
+            {% if is_admin %}
+            <a href="{{ url_for('add_player') }}" class="alert-link">Add the first player</a>
+            {% else %}
+            Contact an administrator to add players.
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-info-circle"></i> About Lincoln-Douglas
+                </h5>
+            </div>
+            <div class="card-body">
+                <p>{{ site_content.ld_description if site_content else 'Individual debate format (1v1)' }}</p>
+                <h6>Format Details:</h6>
+                <ul class="list-unstyled">
+                    <li><i class="bi bi-check-circle text-success"></i> Individual format (1v1)</li>
+                    <li><i class="bi bi-check-circle text-success"></i> Value-based arguments</li>
+                    <li><i class="bi bi-check-circle text-success"></i> Philosophical topics</li>
+                    <li><i class="bi bi-check-circle text-success"></i> Fast-paced speaking</li>
+                </ul>
+            </div>
+        </div>
+        
+        {% if is_admin %}
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-gear"></i> Admin Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('add_player') }}" class="btn btn-primary btn-sm">
+                        <i class="bi bi-plus-circle"></i> Add New Player
+                    </a>
+                    <a href="{{ url_for('record_match') }}" class="btn btn-success btn-sm">
+                        <i class="bi bi-trophy"></i> Record Match
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

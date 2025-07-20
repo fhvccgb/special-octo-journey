@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Add Team - {{ super() }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">
+                    <i class="bi bi-people"></i>
+                    Add New Team
+                </h3>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="team_name" class="form-label">Team Name</label>
+                        <input type="text" class="form-control" id="team_name" name="team_name" required>
+                        <div class="form-text">Enter a unique name for this team</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="player1" class="form-label">Player 1</label>
+                        <select class="form-select" id="player1" name="player1" required>
+                            <option value="">Choose first player...</option>
+                            {% for player_name in players %}
+                            <option value="{{ player_name }}">{{ player_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="player2" class="form-label">Player 2</label>
+                        <select class="form-select" id="player2" name="player2" required>
+                            <option value="">Choose second player...</option>
+                            {% for player_name in players %}
+                            <option value="{{ player_name }}">{{ player_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="format" class="form-label">Format</label>
+                        <select class="form-select" id="format" name="format" required>
+                            <option value="">Choose format...</option>
+                            <option value="PF">Public Forum (PF)</option>
+                        </select>
+                        <div class="form-text">Teams are primarily for Public Forum debate</div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('public_forum') }}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-check-circle"></i> Create Team
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

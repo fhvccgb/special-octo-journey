@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Record Match - {{ super() }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">
+                    <i class="bi bi-trophy"></i>
+                    Record Match Result
+                </h3>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="format" class="form-label">Debate Format</label>
+                        <select class="form-select" id="format" name="format" required onchange="updateCompetitors()">
+                            <option value="">Choose format...</option>
+                            <option value="PF">Public Forum (Teams)</option>
+                            <option value="LD">Lincoln-Douglas (Individual)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="winner" class="form-label">Winner</label>
+                                <select class="form-select" id="winner" name="winner" required>
+                                    <option value="">Choose winner...</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="loser" class="form-label">Loser</label>
+                                <select class="form-select" id="loser" name="loser" required>
+                                    <option value="">Choose loser...</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i>
+                        <strong>Note:</strong> Elo ratings will be automatically updated based on the match result.
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-check-circle"></i> Record Match
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Data from Flask
+const teams = {{ teams|tojson }};
+const players = {{ players|tojson }};
+
+function updateCompetitors() {
+    const format = document.getElementById('format').value;
+    const winnerSelect = document.getElementById('winner');
+    const loserSelect = document.getElementById('loser');
+    
+    // Clear existing options
+    winnerSelect.innerHTML = '<option value="">Choose winner...</option>';
+    loserSelect.innerHTML = '<option value="">Choose loser...</option>';
+    
+    if (format === 'PF') {
+        // Populate with teams
+        Object.keys(teams).forEach(teamName => {
+            const team = teams[teamName];
+            if (team.format === 'PF') {
+                winnerSelect.innerHTML += `<option value="${teamName}">${teamName}</option>`;
+                loserSelect.innerHTML += `<option value="${teamName}">${teamName}</option>`;
+            }
+        });
+    } else if (format === 'LD') {
+        // Populate with LD players
+        Object.keys(players).forEach(playerName => {
+            const player = players[playerName];
+            if (player.formats && player.formats.includes('LD')) {
+                winnerSelect.innerHTML += `<option value="${playerName}">${playerName}</option>`;
+                loserSelect.innerHTML += `<option value="${playerName}">${playerName}</option>`;
+            }
+        });
+    }
+}
+</script>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Ensure competitors list updates when format changes
+document.addEventListener('DOMContentLoaded', function() {
+    updateCompetitors();
+});
+</script>
+{% endblock %}

@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}Public Forum - {{ super() }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>
+        <i class="bi bi-people-fill text-info"></i>
+        Public Forum Teams
+    </h1>
+    {% if is_admin %}
+    <a href="{{ url_for('add_team') }}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Add Team
+    </a>
+    {% endif %}
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        {% if teams %}
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Team Rankings</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Rank</th>
+                                <th>Team</th>
+                                <th>Players</th>
+                                <th>Elo Rating</th>
+                                <th>Record</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for team_name, team in teams %}
+                            <tr>
+                                <td>
+                                    <span class="badge bg-primary">{{ loop.index }}</span>
+                                </td>
+                                <td>
+                                    <strong>{{ team_name }}</strong>
+                                </td>
+                                <td>
+                                    <div class="d-flex flex-column">
+                                        <small>{{ team.player1 }}</small>
+                                        <small>{{ team.player2 }}</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-info">{{ team.elo }}</span>
+                                </td>
+                                <td>
+                                    <small>
+                                        <span class="text-success">{{ team.matches_won }}W</span> - 
+                                        <span class="text-danger">{{ team.matches_lost }}L</span>
+                                    </small>
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('team_profile', team_name=team_name) }}" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="alert alert-info" role="alert">
+            <i class="bi bi-info-circle"></i>
+            No Public Forum teams found. 
+            {% if is_admin %}
+            <a href="{{ url_for('add_team') }}" class="alert-link">Add the first team</a>
+            {% else %}
+            Contact an administrator to add teams.
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-info-circle"></i> About Public Forum
+                </h5>
+            </div>
+            <div class="card-body">
+                <p>{{ site_content.pf_description if site_content else 'Team-based debate format (2v2)' }}</p>
+                <h6>Format Details:</h6>
+                <ul class="list-unstyled">
+                    <li><i class="bi bi-check-circle text-success"></i> Team-based (2 debaters per team)</li>
+                    <li><i class="bi bi-check-circle text-success"></i> Cross-examination style</li>
+                    <li><i class="bi bi-check-circle text-success"></i> Current events topics</li>
+                    <li><i class="bi bi-check-circle text-success"></i> Accessible to audiences</li>
+                </ul>
+            </div>
+        </div>
+        
+        {% if is_admin %}
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-gear"></i> Admin Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('add_team') }}" class="btn btn-primary btn-sm">
+                        <i class="bi bi-plus-circle"></i> Add New Team
+                    </a>
+                    <a href="{{ url_for('record_match') }}" class="btn btn-success btn-sm">
+                        <i class="bi bi-trophy"></i> Record Match
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
