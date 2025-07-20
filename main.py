@@ -249,6 +249,13 @@ def my_rubrics():
                            is_logged_in=True,
                            current_user=user,
                            site_content=data['site_content'])
+@app.route('/add_rubric', methods=['GET', 'POST'])
+def add_rubric():
+    data = load_data()
+    if request.method == 'POST':
+        # Save rubric logic here
+        return redirect(url_for('rubrics'))  # go back to rubrics page
+    return render_template('add_rubric.html', data=data)
 @app.route('/logout')
 def logout():
     """User logout"""
