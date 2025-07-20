@@ -211,7 +211,7 @@ def index():
                          settings=data['settings'],
                          site_content=data['site_content'])
 
-@app.route('/public-forum')
+@app.route('/public-forum', methods=['GET', 'HEAD'])
 def public_forum():
     """Public Forum homepage"""
     data = load_data()
@@ -227,7 +227,7 @@ def public_forum():
                          current_user=get_current_user(),
                          site_content=data['site_content'])
 
-@app.route('/lincoln-douglas')
+@app.route('/lincoln-douglas', methods=['GET', 'HEAD'])
 def lincoln_douglas():
     """Lincoln-Douglas homepage"""
     data = load_data()
@@ -284,7 +284,7 @@ def add_player():
     
     return render_template('add_player.html')
 
-@app.route('/forum')
+@app.route('/forum', methods=['GET', 'HEAD'])
 def forum():
     """Discussion forum"""
     data = load_data()
@@ -659,7 +659,7 @@ def record_match():
     
     return render_template('record_match.html', data=data)
 
-@app.route('/stories')
+@app.route('/stories', methods=['GET', 'HEAD'])
 def stories():
     """View all stories"""
     data = load_data()
