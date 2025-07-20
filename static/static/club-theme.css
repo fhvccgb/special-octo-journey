@@ -1,0 +1,170 @@
+/* Capital Debate Club Theme - Red and Yellow */
+:root {
+  --club-red: #dc3545;
+  --club-yellow: #ffc107;
+  --club-dark-red: #c82333;
+  --club-light-red: #f5c6cb;
+  --club-dark-yellow: #e0a800;
+  --club-light-yellow: #fff3cd;
+}
+
+/* Override Bootstrap primary colors with club red */
+.btn-primary {
+  background-color: var(--club-red);
+  border-color: var(--club-red);
+}
+
+.btn-primary:hover {
+  background-color: var(--club-dark-red);
+  border-color: var(--club-dark-red);
+}
+
+.bg-primary {
+  background-color: var(--club-red) !important;
+}
+
+.text-primary {
+  color: var(--club-red) !important;
+}
+
+.border-primary {
+  border-color: var(--club-red) !important;
+}
+
+/* Club-specific styling */
+.club-header {
+  background: linear-gradient(135deg, var(--club-red) 0%, var(--club-dark-red) 100%);
+  color: white;
+  padding: 1rem 0;
+  margin-bottom: 2rem;
+}
+
+.club-accent {
+  color: var(--club-yellow);
+}
+
+.club-badge {
+  background-color: var(--club-yellow);
+  color: #212529;
+  font-weight: bold;
+}
+
+.navbar-brand {
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.club-motto {
+  font-style: italic;
+  color: var(--club-yellow);
+  text-align: center;
+  margin: 1rem 0;
+  font-size: 1.1rem;
+}
+
+/* Card enhancements for club feel */
+.card {
+  box-shadow: 0 0.125rem 0.25rem rgba(220, 53, 69, 0.075);
+  border: 1px solid rgba(220, 53, 69, 0.125);
+}
+
+.card-header {
+  background-color: rgba(220, 53, 69, 0.05);
+  border-bottom: 1px solid rgba(220, 53, 69, 0.125);
+}
+
+/* Player stats styling */
+.stat-card {
+  background: linear-gradient(45deg, var(--club-light-red), var(--club-light-yellow));
+  border: 2px solid var(--club-red);
+  border-radius: 10px;
+}
+
+.elo-display {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--club-red);
+}
+
+/* Match result colors */
+.match-win {
+  background-color: var(--club-light-yellow);
+  border-left: 4px solid var(--club-yellow);
+}
+
+.match-loss {
+  background-color: var(--club-light-red);
+  border-left: 4px solid var(--club-red);
+}
+
+/* Button variations with yellow */
+.btn-yellow {
+  background-color: var(--club-yellow);
+  border-color: var(--club-yellow);
+  color: #212529;
+  font-weight: bold;
+}
+
+.btn-yellow:hover {
+  background-color: var(--club-dark-yellow);
+  border-color: var(--club-dark-yellow);
+  color: #212529;
+}
+
+.btn-outline-yellow {
+  color: var(--club-yellow);
+  border-color: var(--club-yellow);
+}
+
+.btn-outline-yellow:hover {
+  background-color: var(--club-yellow);
+  border-color: var(--club-yellow);
+  color: #212529;
+}
+
+/* Navigation enhancements */
+.navbar {
+  box-shadow: 0 2px 4px rgba(220, 53, 69, 0.1);
+}
+
+.nav-link:hover {
+  color: var(--club-yellow) !important;
+}
+
+/* Team spirit elements */
+.team-spirit {
+  text-align: center;
+  padding: 2rem;
+  background: linear-gradient(45deg, var(--club-light-red), var(--club-light-yellow));
+  border-radius: 10px;
+  margin: 2rem 0;
+}
+
+.victory-highlight {
+  background-color: var(--club-yellow);
+  color: #212529;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+/* Forum post styling */
+.forum-post {
+  border-left: 4px solid var(--club-red);
+  background-color: rgba(255, 193, 7, 0.05);
+}
+
+/* Match layout specific styling */
+.match-pairing {
+  border: 2px solid var(--club-red);
+  border-radius: 10px;
+  background: linear-gradient(135deg, #fff 0%, var(--club-light-yellow) 100%);
+}
+
+.judge-assignment {
+  background-color: var(--club-yellow);
+  color: #212529;
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+}
