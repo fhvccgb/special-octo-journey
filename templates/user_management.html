@@ -71,7 +71,7 @@
                                         {% endif %}
                                         
                                         {% if not user.is_admin %}
-                                        <form method="POST" action="{{ url_for('grant_admin', user_id=user_id) }}" style="display: inline;">
+                                        <form method="POST" action="{{ url_for('make_admin', user_id=user_id) }}" style="display: inline;">
                                             <button type="submit" class="btn btn-warning" 
                                                     onclick="return confirm('Grant {{ user.username }} team leader powers?')"
                                                     title="Make Team Leader">
