@@ -537,8 +537,8 @@ def admin_settings():
     return render_template('admin_settings.html', settings=data['settings'])
 
 # Continue with existing routes...
-@app.route('/create_team', methods=['GET', 'POST', 'HEAD'])
-def create_team():
+@app.route('/add_team', methods=['GET', 'POST', 'HEAD'])
+def add_team():
     """Create a new PF team - Admin only"""
     if not requires_admin():
         flash('Admin access required!', 'error')
