@@ -679,12 +679,16 @@ def add_team():
         return redirect(url_for('public_forum'))
     
     return render_template('create_team.html', players=pf_players)
-@app.route('/create_match_layout')
+@app.route('/create_match_layout', methods=['GET', 'POST'])
 def create_match_layout_route():
-    return render_template('create_match_layout.html',
-                           is_admin=requires_admin(),
-                           is_logged_in=requires_login(),
-                           current_user=get_current_user())
+    data = load_data()  # Add this line
+    return render_template(
+        'create_match_layout.html',
+        players=data['players'],  # Fix: add players to the template context
+        is_admin=requires_admin(),
+        is_logged_in=requires_login(),
+        current_user=get_current_user()
+    )
 @app.route('/record_match', methods=['GET', 'POST', 'HEAD'])
 def record_match():
     """Record a match result - Admin only"""
