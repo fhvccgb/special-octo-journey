@@ -590,7 +590,7 @@ def admin_settings():
         flash('Settings updated!', 'success')
         return redirect(url_for('admin_settings'))
     
-    return render_template('admin_settings.html', settings=data['settings'])
+    return render_template('admin_settings.html', data=data)
 @app.route('/user_management', methods=['GET', 'HEAD'])
 def user_management():
     """User management panel - Admin only"""
