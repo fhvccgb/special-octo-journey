@@ -209,7 +209,8 @@ def index():
                          is_logged_in=requires_login(),
                          current_user=get_current_user(),
                          settings=data['settings'],
-                         site_content=data['site_content'])
+                         site_content=data['site_content'],
+                         data=data)
 
 @app.route('/public-forum', methods=['GET', 'HEAD'])
 def public_forum():
