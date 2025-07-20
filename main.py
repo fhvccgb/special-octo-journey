@@ -192,7 +192,27 @@ def login():
             flash('Invalid username or password!', 'error')
     
     return render_template('login.html')
-
+@app.route('/my_account', methods=['GET', 'HEAD'])
+def my_account():
+    """Current user's account overview"""
+    if not requires_login():
+        flash('Please log in to view your account.', 'error')
+        return redirect(url_for('login'))
+    
+    user = get_current_user()
+    data = load_data()
+    
+    # Find player data
+    player_name = user.get('player_name')
+    player_data = data['players'].get(player_name, {})
+    
+    return render_template('my_account.html',
+                           user=user,
+                           player=player_data,
+                           is_admin=requires_admin(),
+                           is_logged_in=True,
+                           current_user=user,
+                           site_content=data['site_content'])
 @app.route('/logout')
 def logout():
     """User logout"""
