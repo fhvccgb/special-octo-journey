@@ -535,6 +535,21 @@ def admin_settings():
         return redirect(url_for('admin_settings'))
     
     return render_template('admin_settings.html', settings=data['settings'])
+@app.route('/user_management', methods=['GET', 'HEAD'])
+def user_management():
+    """User management panel - Admin only"""
+    if not requires_admin():
+        flash('Admin access required!', 'error')
+        return redirect(url_for('login'))
+    
+    data = load_data()
+    
+    return render_template('user_management.html',
+                           users=data['users'],
+                           banned_users=data['banned_users'],
+                           is_admin=requires_admin(),
+                           is_logged_in=requires_login(),
+                           current_user=get_current_user())
 @app.route('/edit_website', methods=['GET', 'POST'])
 def edit_website():
     data = load_data()
