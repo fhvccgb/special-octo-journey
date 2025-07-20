@@ -105,6 +105,13 @@ def get_current_user():
         return None
     data = load_data()
     return data['users'].get(session['user_id'])
+    LOG_FILE = 'admin_log.txt'
+
+def log_admin_action(action, admin_username):
+    """Append an admin action to the log file"""
+    with open(LOG_FILE, 'a') as f:
+        timestamp = datetime.now().isoformat()
+        f.write(f"[{timestamp}] {admin_username}: {action}\n")
 
 @app.route('/register', methods=['GET', 'POST', 'HEAD'])
 def register():
@@ -818,6 +825,53 @@ def rubrics():
                            is_logged_in=requires_login(),
                            current_user=get_current_user(),
                            site_content=data['site_content'])
+@app.route('/change_password/<user_id>', methods=['POST'])
+def change_password(user_id):
+    if not is_admin():
+        flash("Unauthorized.", "danger")
+        return redirect(url_for('index'))
+
+    new_password = request.form.get('new_password')
+    if not new_password:
+        flash("New password required.", "danger")
+        return redirect(url_for('user_management'))
+
+    data = load_data()
+    if user_id in data['users']:
+        hashed = hashlib.sha256(new_password.encode()).hexdigest()
+        data['users'][user_id]['password'] = hashed
+        save_data(data)
+
+        admin_name = data['users'][session['user_id']]['username']
+        log_admin_action(f"Changed password for user {user_id}", admin_name)
+
+        flash("Password updated.", "success")
+    else:
+        flash("User not found.", "danger")
+
+    return redirect(url_for('user_management'))
+
+
+@app.route('/delete_user/<user_id>', methods=['POST'])
+def delete_user(user_id):
+    if not is_admin():
+        flash("Unauthorized.", "danger")
+        return redirect(url_for('index'))
+
+    data = load_data()
+    if user_id in data['users']:
+        deleted_user = data['users'][user_id]['username']
+        del data['users'][user_id]
+        save_data(data)
+
+        admin_name = data['users'][session['user_id']]['username']
+        log_admin_action(f"Deleted user {deleted_user} (ID: {user_id})", admin_name)
+
+        flash("User deleted.", "warning")
+    else:
+        flash("User not found.", "danger")
+
+    return redirect(url_for('user_management'))
 if __name__ == '__main__':
     # Create default admin account if no users exist
     data = load_data()
