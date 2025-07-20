@@ -429,7 +429,7 @@ def admin():
     return render_template('admin.html',
                            is_admin=requires_admin(),
                            is_logged_in=requires_login(),
-                           current_user=get_current_user()
+                           current_user=get_current_user())
 @app.route('/admin_panel', methods=['GET', 'HEAD'])
 def admin_panel():
     """Main admin panel"""
