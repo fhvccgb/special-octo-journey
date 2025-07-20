@@ -535,10 +535,10 @@ def admin_settings():
         return redirect(url_for('admin_settings'))
     
     return render_template('admin_settings.html', settings=data['settings'])
- @app.route('/edit_website', methods=['GET', 'POST'])
- def edit_website():
+@app.route('/edit_website', methods=['GET', 'POST'])
+def edit_website():
     data = load_data()
-    
+
     if request.method == 'POST':
         if not requires_admin():
             flash("You don't have permission to do that.", "danger")
