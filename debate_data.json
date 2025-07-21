@@ -3,10 +3,10 @@
     "admin1": {
       "username": "Admin User",
       "email": "admin@example.com",
-      "password": "f13a0ed7f59d92b8f26b29a63be2cba1:2d0d1c3c3733e9b1c3e56d8d90c1cc0b728b057fe050ae15a26304be07ec2107",
+      "password": "d37617109dd486e74dcd39a860ccc9fb:e800ae47feb7ff9763c5f8a100900265af1065482d41ac6222e9cbed45d3ad2f",
       "player_name": "Admin User",
       "is_admin": true,
-      "created_date": "2025-07-21T00:00:00",
+      "created_date": "2025-07-21T01:19:02",
       "approved": true
     }
   },
