@@ -568,20 +568,7 @@ def add_rubric():
         return redirect(url_for('rubrics'))
     return render_template('add_rubric.html', data=data)
 
-# Login
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    # ... login logic ...
-    pass
 
-# Logout (already present in your app)
-# @app.route('/logout')
-
-# Account overview (already present)
-# @app.route('/my_account')
-
-# Player profile (already present)
-# @app.route('/player_profile/<player_name>')
 
 # Team profile
 @app.route('/team_profile/<team_name>', methods=['GET', 'HEAD'])
