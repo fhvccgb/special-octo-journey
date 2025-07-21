@@ -93,6 +93,7 @@ def update_elo_ratings(winner_elo, loser_elo, k=32):
 def index():
     data = load_data()
     return render_template('homepage.html',
+        data=data,                
         is_admin=requires_admin(),
         is_logged_in=requires_login(),
         current_user=get_current_user(),
