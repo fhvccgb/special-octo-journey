@@ -588,40 +588,6 @@ def team_profile(team_name):
         site_content=data.get('site_content', {})
     )
 
-# Add team
-@app.route('/add_team', methods=['GET', 'POST'])
-def add_team():
-    if not requires_admin():
-        flash('Admin access required!', 'error')
-        return redirect(url_for('login'))
-    data = load_data()
-    pf_players = {k: v for k, v in data['players'].items()
-                  if 'PF' in v.get('formats', []) or v.get('format') == 'PF'}
-    if request.method == 'POST':
-        team_name = request.form['team_name'].strip()
-        member1 = request.form['member1']
-        member2 = request.form['member2']
-        if not team_name or member1 == member2:
-            flash('Invalid team configuration!', 'error')
-            return render_template('create_team.html', players=pf_players)
-        if team_name in data['teams']:
-            flash('Team name already exists!', 'error')
-            return render_template('create_team.html', players=pf_players)
-        avg_elo = round((data['players'][member1]['elo'] + data['players'][member2]['elo']) / 2)
-        data['teams'][team_name] = {
-            'members': [member1, member2],
-            'elo': avg_elo,
-            'format': 'PF',
-            'matches_won': 0,
-            'matches_lost': 0,
-            'total_matches': 0,
-            'created_date': datetime.now().isoformat()
-        }
-        save_data(data)
-        flash(f'Created team {team_name}!', 'success')
-        return redirect(url_for('public_forum'))
-    return render_template('create_team.html', players=pf_players)
-
 # Public Forum Teams
 @app.route('/public_forum', methods=['GET', 'HEAD'])
 def public_forum():
