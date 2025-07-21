@@ -1,15 +1,5 @@
 {
-  "users": {
-    "fhvccgb": {
-      "username": "Henry Graunke",
-      "email": "henry@example.com",
-      "password": "b1b83f6b3e8a6bd2bfae9b7ab5e2e7e1c6c2e5e2b5d1ebfa1a0e8d6b3f7a8c9d5", 
-      "player_name": "Henry Graunke",
-      "is_admin": true,
-      "created_date": "2025-07-21T00:41:10",
-      "approved": true
-    }
-  },
+  "users": {},
   "players": {
     "Henry Graunke": {
       "elo": 1600,
@@ -47,5 +37,4 @@
     "club_achievements": [],
     "fun_facts": []
   }
-}
 }
