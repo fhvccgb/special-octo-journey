@@ -217,7 +217,13 @@ def user_management():
         is_logged_in=requires_login(),
         current_user=get_current_user()
     )
-
+@app.route('/admin', methods=['GET', 'HEAD'])
+def admin_dashboard():
+    """Redirect /admin to user_management (admin panel)"""
+    if not requires_admin():
+        flash('Admin access required!', 'error')
+        return redirect(url_for('login'))
+    return redirect(url_for('user_management'))
 @app.route('/admin/change_password/<user_id>', methods=['POST'])
 def admin_change_password(user_id):
     if not requires_admin():
