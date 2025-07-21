@@ -1,77 +1,50 @@
 {
+  "users": {
+    "henry_id_123456789abcdef": {
+      "username": "Henry Graunke",
+      "email": "henry@example.com",
+      "password": "SOME_HASHED_PASSWORD",
+      "player_name": "Henry Graunke",
+      "is_admin": true,
+      "created_date": "2025-07-21T00:34:15",
+      "approved": true
+    }
+  },
   "players": {
-    "Administrator": {
-      "formats": [
-        "PF",
-        "LD"
-      ],
-      "elo": 1200,
-      "matches_won": 0,
-      "matches_lost": 0,
-      "total_matches": 0,
-      "joined_date": "2025-07-20T06:48:13.436349"
-    },
     "Henry Graunke": {
-      "formats": [
-        "PF",
-        "LD"
-      ],
-      "elo": 1200,
+      "elo": 1600,
+      "formats": ["LD", "PF"],
       "matches_won": 0,
       "matches_lost": 0,
-      "total_matches": 0,
-      "joined_date": "2025-07-20T06:50:33.567441"
-    },
-    "Jesse Aubry": {
-      "formats": [
-        "PF",
-        "LD"
-      ],
-      "elo": 1200,
-      "matches_won": 0,
-      "matches_lost": 0,
-      "total_matches": 0,
-      "joined_date": "2025-07-20T07:17:03.535203"
+      "total_matches": 0
     }
   },
   "teams": {},
   "matches": [],
-  "stories": [],
-  "rubrics": {},
-  "users": {
-    "db85c5d5962e669e478478ba862c8ba3": {
-      "username": "admin",
-      "email": "admin@school.edu",
-      "password": "ce2aed2c5d4ab18a32fb8be85f6fc5d8:54a3da359671d12d68217286b3efe339d1480f66b40dec601d9567083f2dbd27",
-      "player_name": "Administrator",
-      "is_admin": true,
-      "created_date": "2025-07-20T06:48:13.436336",
-      "approved": true
-    },
-    "476c6a7454f8eafa2f493dab4d1595b0": {
-      "username": "Henry Graunke",
-      "email": "graunkehd@students.osd.wednet.edu",
-      "password": "305c800822a802708fe65d008fcaf784:3279521021ba16cf9c6312464a2677eebcd2a15bcc6a6cf0299b2677542a4ef1",
-      "player_name": "Henry Graunke",
-      "is_admin": false,
-      "created_date": "2025-07-20T06:59:26.164904",
-      "approved": true
-    }
-  },
-  "forum_posts": [],
   "banned_users": {},
-  "site_content": {
-    "title": "Capital High School Debate System",
-    "welcome_message": "Welcome to our debate community!",
-    "pf_description": "Team-based debate format (2v2)",
-    "ld_description": "Individual debate format (1v1)",
-    "theme_color": "#3498db"
-  },
   "settings": {
     "forum_enabled": true,
     "hide_elo": false,
     "hide_records": false,
     "registration_enabled": true,
     "require_approval": false
+  },
+  "feature_toggles": {
+    "match_history_visible": true,
+    "player_profiles_enabled": true,
+    "team_stats_enabled": true,
+    "fun_facts_enabled": true,
+    "achievements_enabled": true
+  },
+  "site_content": {
+    "title": "Capital High School Debate System",
+    "subtitle": "Welcome to the debate club portal!"
+  },
+  "forum_posts": [],
+  "stories": [],
+  "rubrics": {},
+  "fun_content": {
+    "club_achievements": [],
+    "fun_facts": []
   }
 }
