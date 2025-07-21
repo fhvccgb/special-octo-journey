@@ -3,10 +3,10 @@
     "admin1": {
       "username": "Henry Graunke",
       "email": "henry@example.com",
-      "password": "a1b2c3d4e5f6g7h8i9j0a1b2c3d4e5f6:c6e6eae9b01c1b5e6a7c7a2d6d0c3e7b5c9d0e2f7d4a1e2c3b8e9d6a3c7e0b1f",
+      "password": "1234567890abcdef1234567890abcdef:2ad09dcb55d4b8be4e14d0f7d8d13a3b92f6e1f6c795b391f042e9f6e2d3e84d",
       "player_name": "Henry Graunke",
       "is_admin": true,
-      "created_date": "2025-07-21T00:58:52",
+      "created_date": "2025-07-21T01:04:34",
       "approved": true
     }
   },
