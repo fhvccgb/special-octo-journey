@@ -1,24 +1,6 @@
 {
-  "users": {
-    "admin1": {
-      "username": "Admin User",
-      "email": "admin@example.com",
-      "password": "d37617109dd486e74dcd39a860ccc9fb:e800ae47feb7ff9763c5f8a100900265af1065482d41ac6222e9cbed45d3ad2f",
-      "player_name": "Admin User",
-      "is_admin": true,
-      "created_date": "2025-07-21T01:19:02",
-      "approved": true
-    }
-  },
-  "players": {
-    "Admin User": {
-      "elo": 1600,
-      "formats": ["LD", "PF"],
-      "matches_won": 0,
-      "matches_lost": 0,
-      "total_matches": 0
-    }
-  },
+  "users": {},
+  "players": {},
   "teams": {},
   "matches": [],
   "banned_users": {},
