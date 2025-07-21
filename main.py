@@ -567,11 +567,6 @@ def add_rubric():
         flash('Rubric added!', 'success')
         return redirect(url_for('rubrics'))
     return render_template('add_rubric.html', data=data)
-# Registration
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    # ... registration logic ...
-    pass
 
 # Login
 @app.route('/login', methods=['GET', 'POST'])
