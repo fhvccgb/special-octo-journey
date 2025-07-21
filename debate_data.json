@@ -1,17 +1,17 @@
 {
   "users": {
     "admin1": {
-      "username": "Henry Graunke",
-      "email": "henry@example.com",
-      "password": "1234567890abcdef1234567890abcdef:2ad09dcb55d4b8be4e14d0f7d8d13a3b92f6e1f6c795b391f042e9f6e2d3e84d",
-      "player_name": "Henry Graunke",
+      "username": "Admin User",
+      "email": "admin@example.com",
+      "password": "f13a0ed7f59d92b8f26b29a63be2cba1:2d0d1c3c3733e9b1c3e56d8d90c1cc0b728b057fe050ae15a26304be07ec2107",
+      "player_name": "Admin User",
       "is_admin": true,
-      "created_date": "2025-07-21T01:04:34",
+      "created_date": "2025-07-21T00:00:00",
       "approved": true
     }
   },
   "players": {
-    "Henry Graunke": {
+    "Admin User": {
       "elo": 1600,
       "formats": ["LD", "PF"],
       "matches_won": 0,
