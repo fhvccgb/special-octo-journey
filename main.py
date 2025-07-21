@@ -52,20 +52,13 @@ def verify_password(password, stored_hash):
         return False
 
 def requires_admin():
-    def get_current_user():
     if session.get('is_backdoor_admin'):
-        return {
-            "username": "admin",
-            "email": "admin@example.com",
-            "player_name": "Admin User",
-            "is_admin": True,
-            "approved": True
-        }
+        return True
     user_id = session.get('user_id')
     if not user_id:
-        return None
+        return False
     data = load_data()
-    return data['users'].get(user_id)
+    user = data['users'].get(user_id)
     return user and user.get("is_admin", False)
 
 def requires_login():
