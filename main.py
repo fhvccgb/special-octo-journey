@@ -411,7 +411,54 @@ def player_profile(player_name):
         current_user=get_current_user(),
         site_content=data['site_content']
     )
+@app.route('/add_player', methods=['GET', 'POST'])
+def add_player():
+    if not requires_admin():
+        flash('Admin access required!', 'error')
+        return redirect(url_for('login'))
+    
+    data = load_data()
 
+    if request.method == 'POST':
+        name = request.form['name'].strip()
+        format_ld = 'LD' in request.form.getlist('formats')
+        format_pf = 'PF' in request.form.getlist('formats')
+        starting_elo = request.form.get('starting_elo', '1200')
+
+        if not name:
+            flash('Player name is required!', 'error')
+            return render_template('add_player.html')
+
+        if name in data['players']:
+            flash('Player already exists!', 'error')
+            return render_template('add_player.html')
+
+        try:
+            elo = int(starting_elo)
+        except ValueError:
+            flash('Invalid Elo rating.', 'error')
+            return render_template('add_player.html')
+
+        formats = []
+        if format_ld:
+            formats.append('LD')
+        if format_pf:
+            formats.append('PF')
+
+        data['players'][name] = {
+            'elo': elo,
+            'formats': formats,
+            'matches_won': 0,
+            'matches_lost': 0,
+            'total_matches': 0,
+            'created_date': datetime.now().isoformat()
+        }
+
+        save_data(data)
+        flash(f'Player {name} added successfully!', 'success')
+        return redirect(url_for('user_management'))
+
+    return render_template('add_player.html')
 @app.route('/add_team', methods=['GET', 'POST', 'HEAD'])
 def add_team():
     """Create a new PF team - Admin only"""
