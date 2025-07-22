@@ -561,7 +561,34 @@ def record_match():
         flash('Match recorded successfully!', 'success')
         return redirect(url_for('index'))
     return render_template('record_match.html', data=data)
+@app.route('/edit_website', methods=['GET', 'POST'])
+def edit_website():
+    if not requires_admin():
+        flash('Admin access required!', 'error')
+        return redirect(url_for('login'))
 
+    data = load_data()
+    if 'site_content' not in data:
+        data['site_content'] = {}
+
+    if request.method == 'POST':
+        form = request.form
+        data['site_content']['title'] = form.get('title', '').strip()
+        data['site_content']['club_name'] = form.get('club_name', '').strip()
+        data['site_content']['welcome_message'] = form.get('welcome_message', '').strip()
+        data['site_content']['team_motto'] = form.get('team_motto', '').strip()
+        data['site_content']['pf_description'] = form.get('pf_description', '').strip()
+        data['site_content']['ld_description'] = form.get('ld_description', '').strip()
+        save_data(data)
+        flash('Website content updated successfully!', 'success')
+        return redirect(url_for('edit_website'))
+
+    return render_template('edit_website.html',
+        site_content=data.get('site_content', {}),
+        is_admin=requires_admin(),
+        is_logged_in=requires_login(),
+        current_user=get_current_user()
+    )
 @app.route('/stories', methods=['GET', 'HEAD'])
 def stories():
     """View all stories"""
