@@ -650,7 +650,35 @@ def add_rubric():
         flash('Rubric added!', 'success')
         return redirect(url_for('rubrics'))
     return render_template('add_rubric.html', data=data)
+<script>
+function deletePost(postId) {
+    if (confirm('Are you sure you want to delete this post?')) {
+        fetch(`/delete_forum_post/${postId}`, { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Failed to delete post.');
+                }
+            });
+    }
+}
 
+function clearAllPosts() {
+    if (confirm('Are you sure you want to delete ALL forum posts? This cannot be undone.')) {
+        fetch('/clear_all_forum_posts', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Failed to clear posts.');
+                }
+            });
+    }
+}
+</script>
 
 
 # Team profile
