@@ -203,7 +203,40 @@ def my_account():
         current_user=user,
         site_content=data['site_content']
     )
+@app.route('/forum', methods=['GET', 'HEAD'])
+def forum():
+    data = load_data()
+    posts = data.get('forum_posts', [])
+    users = data.get('users', {})
+    return render_template('forum.html',
+                           posts=posts,
+                           users=users,
+                           is_admin=requires_admin(),
+                           is_logged_in=requires_login(),
+                           current_user=get_current_user(),
+                           site_content=data.get('site_content', {})
+    )
 
+@app.route('/add_forum_post', methods=['POST'])
+def add_forum_post():
+    if not requires_login():
+        flash("Please log in to post.", "error")
+        return redirect(url_for('forum'))
+    content = request.form.get('content', '').strip()
+    if not content:
+        flash("Post content cannot be empty.", "error")
+        return redirect(url_for('forum'))
+    data = load_data()
+    post = {
+        'id': len(data.get('forum_posts', [])) + 1,
+        'author': get_current_user()['username'],
+        'content': content,
+        'date': datetime.now().isoformat()
+    }
+    data.setdefault('forum_posts', []).append(post)
+    save_data(data)
+    flash("Post added successfully.", "success")
+    return redirect(url_for('forum'))
 @app.route('/user_management', methods=['GET', 'HEAD'])
 def user_management():
     if not requires_admin():
